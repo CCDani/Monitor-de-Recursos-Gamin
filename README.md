@@ -1,4 +1,4 @@
-# Monitor de Recursos Gamin 🚀
+# Monitor de Recursos Gaming 🚀
 
 Un dashboard de monitoreo de sistema en tiempo real, ligero y personalizable, diseñado para gamers y entusiastas del rendimiento. Está construido con Python y la biblioteca Qt (PyQt6).
 
@@ -124,5 +124,6 @@ pyinstaller --onefile --windowed --icon=icono.ico --hidden-import=pyqtgraph --hi
 
 3. ¡Listo!
 PyInstaller trabajará durante unos minutos. Cuando termine, encontrarás tu ejecutable final en la carpeta dist/.
+
 
 Tu dashboard.exe está listo para usarse.
