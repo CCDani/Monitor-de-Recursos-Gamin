@@ -44,7 +44,7 @@ El dashboard monitoriza los siguientes componentes en tiempo real:
     * **Historial de Picos (+95%):** Un contador que registra cuántas veces la CPU, GPU (Uso), VRAM o RAM han superado el 95% de uso durante la sesión.
 
 * **⚙️ Utilidades:**
-    * **Apagado Automático:** Un interruptor (ON/OFF) que apagará el PC de forma segura después de que el ventilador de la GPU haya estado a 0% durante 1 minuto (ideal para después de una sesión de juego).
+    * **Apagado Automático: Un interruptor (ON/OFF) que apagará el PC de forma segura. El apagado se activa cuando la GPU ha permanecido fría (<50°C) y en reposo (<5% de uso) durante 5 minutos (ideal para después de una sesión de juego).
     * **Scroll Integrado:** Toda la interfaz tiene un scroll vertical para adaptarse a cualquier tamaño de pantalla.
     * **Pausa al Arrastrar:** El refresco de datos se pausa automáticamente mientras mueves la ventana para evitar *lag* en la interfaz (similar al Administrador de Tareas de Windows).
 
@@ -127,4 +127,5 @@ PyInstaller trabajará durante unos minutos. Cuando termine, encontrarás tu eje
 
 
 Tu dashboard.exe está listo para usarse.
+
 
