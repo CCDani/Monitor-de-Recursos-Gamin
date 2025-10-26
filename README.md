@@ -63,11 +63,11 @@ El dashboard monitoriza los siguientes componentes en tiempo real:
 
 Sigue estos pasos para ejecutar el dashboard desde el código fuente.
 
-### 1. Clonar el Repositorio
+### 1. Clonar el Repositorio o descargarte el .ZIP
 ```bash
-git clone [https://github.com/CCDani.git](https://github.com/CCDani.git)
+git clone https://github.com/CCDani/Monitor-de-Recursos-Gaming.git
 ```
-cd TU_REPOSITORIO
+cd Monitor-de-Recursos-Gaming
 
 2. Crear un Entorno Virtual
 Es una buena práctica crear un entorno virtual para aislar las dependencias del proyecto.
@@ -127,3 +127,4 @@ PyInstaller trabajará durante unos minutos. Cuando termine, encontrarás tu eje
 
 
 Tu dashboard.exe está listo para usarse.
+
