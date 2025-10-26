@@ -57,11 +57,11 @@ class MonitorDashboard(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.setWindowTitle("Monitor de Recursos Gamin")
+        self.setWindowTitle("Monitor de Recursos Gaming")
         self.resize(800, 850) # Tamaño inicial
 
         self.shutdown_armed = False
-        self.fan_zero_counter = 0
+        self.idle_counter = 0 # (NUEVO) Renombrado de 'fan_zero_counter'
 
         # --- Contadores y banderas para Picos ---
         self.cpu_count = psutil.cpu_count()
@@ -194,6 +194,7 @@ class MonitorDashboard(QMainWindow):
         main_layout.setColumnStretch(0, 1)
         main_layout.setColumnStretch(1, 2)
 
+        # (CPU, GPU, RAM, Discos, Red... sin cambios)
         # --- CPU (Fila 0) ---
         cpu_stats_group = QGroupBox("CPU")
         cpu_layout = QVBoxLayout()
@@ -314,7 +315,10 @@ class MonitorDashboard(QMainWindow):
         # --- Apagado (Fila 5) ---
         shutdown_group = QGroupBox("Apagado Automático")
         shutdown_layout = QVBoxLayout()
-        self.shutdown_checkbox = QCheckBox("Apagar cuando la GPU esté fría (Ventilador a 0% Durante 1 minuto)")
+        # --- ¡¡AQUÍ EL CAMBIO!! ---
+        # Texto del CheckBox actualizado. 5 minutos = 300 segundos
+        self.shutdown_checkbox = QCheckBox("Apagar si GPU está fría (<50°C) y en reposo (<5%) por 5 minutos")
+        # --- FIN DEL CAMBIO ---
         self.shutdown_checkbox.toggled.connect(self.toggle_shutdown)
         self.shutdown_status_label = QLabel("Apagado: DESACTIVADO")
         self.shutdown_status_label.setObjectName("shutdown_status")
@@ -327,15 +331,16 @@ class MonitorDashboard(QMainWindow):
         self.scroll_area.setWidget(scroll_content_widget)
 
     def toggle_shutdown(self, checked):
-        # (Función sin cambios)
         self.shutdown_armed = checked
         if checked:
             print("Apagado automático ARMADO.")
-            self.shutdown_status_label.setText("Apagado: ARMADO (esperando ventilador a 0%...)")
+            # --- ¡¡AQUÍ EL CAMBIO!! ---
+            self.shutdown_status_label.setText("Apagado: ARMADO (esperando GPU en reposo...)")
+            # --- FIN DEL CAMBIO ---
             self.shutdown_status_label.setStyleSheet("color: #FFB84C;")
         else:
             print("Apagado automático DESARMADO.")
-            self.fan_zero_counter = 0 
+            self.idle_counter = 0 # (NUEVO) Resetea el nuevo contador
             self.shutdown_status_label.setText("Apagado: DESACTIVADO")
             self.shutdown_status_label.setStyleSheet("color: #E0E0E0;")
 
@@ -350,6 +355,7 @@ class MonitorDashboard(QMainWindow):
         self.close()
 
     def actualizar_datos(self):
+        # (CPU, Top Procs... sin cambios)
         # --- CPU ---
         cpu_percent = psutil.cpu_percent()
         cpu_mhz = psutil.cpu_freq().current
@@ -364,7 +370,6 @@ class MonitorDashboard(QMainWindow):
         # --- Lógica de Contador para CPU ---
         if cpu_percent > 95 and not self.cpu_high_flag:
             self.cpu_peak_count += 1
-            # --- ¡¡AQUÍ EL CAMBIO!! ---
             texto = "vez" if self.cpu_peak_count == 1 else "veces"
             self.cpu_peak_label.setText(f"CPU: {self.cpu_peak_count} {texto}")
             self.cpu_high_flag = True
@@ -419,36 +424,39 @@ class MonitorDashboard(QMainWindow):
                 self.gpu_plot_data.append(util.gpu)
                 self.gpu_plot_curve.setData(self.gpu_plot_data)
 
-                # --- Lógica de Contador para GPU y VRAM ---
+                # (Contadores de picos sin cambios)
                 if util.gpu > 95 and not self.gpu_high_flag:
                     self.gpu_peak_count += 1
-                    # --- ¡¡AQUÍ EL CAMBIO!! ---
                     texto = "vez" if self.gpu_peak_count == 1 else "veces"
                     self.gpu_peak_label.setText(f"GPU (Uso): {self.gpu_peak_count} {texto}")
                     self.gpu_high_flag = True
                 elif util.gpu < 90 and self.gpu_high_flag:
                     self.gpu_high_flag = False
-                
                 if vram_percent > 95 and not self.vram_high_flag:
                     self.vram_peak_count += 1
-                    # --- ¡¡AQUÍ EL CAMBIO!! ---
                     texto = "vez" if self.vram_peak_count == 1 else "veces"
                     self.vram_peak_label.setText(f"VRAM: {self.vram_peak_count} {texto}")
                     self.vram_high_flag = True
                 elif vram_percent < 90 and self.vram_high_flag:
                     self.vram_high_flag = False
 
-                # Lógica de apagado
+                # --- ¡¡AQUÍ EL CAMBIO!! ---
+                # Lógica de apagado (ahora basada en Temp y Uso)
+                SHUTDOWN_SECONDS = 300 # 5 minutos
                 if self.shutdown_armed:
-                    if fan == 0:
-                        self.fan_zero_counter += 1
-                        remaining = 60 - self.fan_zero_counter
-                        self.shutdown_status_label.setText(f"Apagado: Ventilador a 0%. Apagando en {remaining}s...")
-                        if self.fan_zero_counter >= 60:
+                    # Comprueba si la GPU está fría Y en reposo
+                    if temp < 50 and util.gpu < 5:
+                        self.idle_counter += 1
+                        remaining = SHUTDOWN_SECONDS - self.idle_counter
+                        self.shutdown_status_label.setText(f"Apagado: GPU en reposo. Apagando en {remaining}s...")
+                        
+                        if self.idle_counter >= SHUTDOWN_SECONDS:
                             self.trigger_shutdown()
                     else:
-                        self.fan_zero_counter = 0
-                        self.shutdown_status_label.setText("Apagado: ARMADO (esperando ventilador a 0%...)")
+                        # Si la GPU está caliente o en uso, resetea el contador
+                        self.idle_counter = 0
+                        self.shutdown_status_label.setText("Apagado: ARMADO (esperando GPU en reposo...)")
+                # --- FIN DEL CAMBIO ---
 
             except NVMLError as e:
                 if e.value == NVML_ERROR_NOT_SUPPORTED:
@@ -465,10 +473,9 @@ class MonitorDashboard(QMainWindow):
         self.ram_plot_data.append(ram.percent)
         self.ram_plot_curve.setData(self.ram_plot_data)
 
-        # --- Lógica de Contador para RAM ---
+        # Lógica de Contador para RAM
         if ram.percent > 95 and not self.ram_high_flag:
             self.ram_peak_count += 1
-            # --- ¡¡AQUÍ EL CAMBIO!! ---
             texto = "vez" if self.ram_peak_count == 1 else "veces"
             self.ram_peak_label.setText(f"RAM: {self.ram_peak_count} {texto}")
             self.ram_high_flag = True
