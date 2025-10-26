@@ -316,8 +316,8 @@ class MonitorDashboard(QMainWindow):
         shutdown_group = QGroupBox("Apagado Automático")
         shutdown_layout = QVBoxLayout()
         # --- ¡¡AQUÍ EL CAMBIO!! ---
-        # Texto del CheckBox actualizado. 5 minutos = 300 segundos
-        self.shutdown_checkbox = QCheckBox("Apagar si GPU está fría (<50°C) y en reposo (<5%) por 5 minutos")
+        # Texto del CheckBox actualizado. 1 minutos = 60 segundos
+        self.shutdown_checkbox = QCheckBox("Apagar si GPU está fría (<50°C) y en reposo (<10%) durante 1 minuto")
         # --- FIN DEL CAMBIO ---
         self.shutdown_checkbox.toggled.connect(self.toggle_shutdown)
         self.shutdown_status_label = QLabel("Apagado: DESACTIVADO")
@@ -442,10 +442,10 @@ class MonitorDashboard(QMainWindow):
 
                 # --- ¡¡AQUÍ EL CAMBIO!! ---
                 # Lógica de apagado (ahora basada en Temp y Uso)
-                SHUTDOWN_SECONDS = 300 # 5 minutos
+                SHUTDOWN_SECONDS = 60 # 1 minuto
                 if self.shutdown_armed:
                     # Comprueba si la GPU está fría Y en reposo
-                    if temp < 50 and util.gpu < 5:
+                    if temp < 50 and util.gpu < 10:
                         self.idle_counter += 1
                         remaining = SHUTDOWN_SECONDS - self.idle_counter
                         self.shutdown_status_label.setText(f"Apagado: GPU en reposo. Apagando en {remaining}s...")
