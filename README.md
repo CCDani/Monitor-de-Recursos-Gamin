@@ -67,7 +67,7 @@ Sigue estos pasos para ejecutar el dashboard desde el código fuente.
 
 ### 1. Clonar el Repositorio
 ```bash
-git clone [https://github.com/CCDani.git](https://github.com/CCDani.git)
+git clone https://github.com/CCDani/Monitor-de-Recursos-Gaming.git
 ```
 cd TU_REPOSITORIO
 
@@ -128,3 +128,4 @@ pyinstaller --onefile --windowed --icon=icono.ico --hidden-import=pyqtgraph --hi
 PyInstaller trabajará durante unos minutos. Cuando termine, encontrarás tu ejecutable final en la carpeta dist/.
 
 Tu dashboard.exe está listo para usarse.
+
