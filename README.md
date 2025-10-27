@@ -1,10 +1,10 @@
-# Monitor de Recursos Gaming 🚀
+# Monitor de Recursos Gamin 🚀
 
 Un dashboard de monitoreo de sistema en tiempo real, ligero y personalizable, diseñado para gamers y entusiastas del rendimiento. Está construido con Python y la biblioteca Qt (PyQt6).
 
 Esta herramienta te permite vigilar todos los recursos vitales de tu sistema mientras juegas, ayudándote a diagnosticar cuellos de botella, *stuttering* (tirones) y problemas de rendimiento sin consumir apenas recursos.
 
-![Screenshot of Monitor de Recursos Gamin](Captura.JPG)
+![Screenshot of Monitor de Recursos Gaming](Captura.JPG)
 
 ## 📋 Características
 
@@ -30,21 +30,23 @@ El dashboard monitoriza los siguientes componentes en tiempo real:
     * Gráfico de historial de uso de los últimos 60 segundos.
 
 * **💾 Unidades (Discos):**
-    * Detección automática de todas las unidades físicas (HDD/SSD).
+    * Detección automática de todas las unidades físicas.
     * Mapeo automático de letras (Ej: `Unidad (C:)`).
-    * Porcentaje de **actividad** en tiempo real (0-100%).
     * Barra de progreso de actividad con código de color.
+    * Porcentaje de actividad (tiempo ocupado)
+    * Velocidad de Lectura (MB/s)
+    * Velocidad de Escritura (MB/s)
 
 * **🌐 Red:**
     * Velocidad de descarga actual (MB/s).
     * Velocidad de subida actual (MB/s).
 
 * **🕵️‍♂️ Diagnóstico (¡El "Chivato"!):**
-    * **Top 3 Procesos:** Muestra los 3 procesos que más CPU están consumiendo (ignorando el "System Idle Process"). Ideal para cazar tirones causados por procesos en segundo plano.
+    * **Top 3 Procesos:** Muestra los 3 procesos que más CPU están consumiendo (ignorando el "System Idle Process"). Ideal para cazar tirones causados por procesos en segundo plano. (actualizado de forma infrecuente para ahorrar recursos).
     * **Historial de Picos (+95%):** Un contador que registra cuántas veces la CPU, GPU (Uso), VRAM o RAM han superado el 95% de uso durante la sesión.
 
 * **⚙️ Utilidades:**
-    * **Apagado Automático: Un interruptor (ON/OFF) que apagará el PC de forma segura. El apagado se activa cuando la GPU ha permanecido fría (<50°C) y en reposo (<5% de uso) durante 5 minutos (ideal para después de una sesión de juego).
+    * **Apagado Automático:** Una función opcional para apagar el PC automáticamente si la GPU se mantiene fría (<50°C) y en reposo (<10%) durante un minuto.
     * **Scroll Integrado:** Toda la interfaz tiene un scroll vertical para adaptarse a cualquier tamaño de pantalla.
     * **Pausa al Arrastrar:** El refresco de datos se pausa automáticamente mientras mueves la ventana para evitar *lag* en la interfaz (similar al Administrador de Tareas de Windows).
 
@@ -63,11 +65,11 @@ El dashboard monitoriza los siguientes componentes en tiempo real:
 
 Sigue estos pasos para ejecutar el dashboard desde el código fuente.
 
-### 1. Clonar el Repositorio o descargarte el .ZIP
+### 1. Clonar el Repositorio
 ```bash
-git clone https://github.com/CCDani/Monitor-de-Recursos-Gaming.git
+git clone [https://github.com/CCDani.git](https://github.com/CCDani.git)
 ```
-cd Monitor-de-Recursos-Gaming
+cd TU_REPOSITORIO
 
 2. Crear un Entorno Virtual
 Es una buena práctica crear un entorno virtual para aislar las dependencias del proyecto.
@@ -125,7 +127,4 @@ pyinstaller --onefile --windowed --icon=icono.ico --hidden-import=pyqtgraph --hi
 3. ¡Listo!
 PyInstaller trabajará durante unos minutos. Cuando termine, encontrarás tu ejecutable final en la carpeta dist/.
 
-
 Tu dashboard.exe está listo para usarse.
-
-
